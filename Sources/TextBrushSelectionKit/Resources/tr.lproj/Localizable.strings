@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Sürükleyerek metin seç";
+"text_brush_select_all" = "Tümünü seç";
+"text_brush_deselect_all" = "Seçimi kaldır";
+"text_brush_copy" = "Kopyala";
+"text_brush_share" = "Paylaş";
+"text_brush_empty" = "Önce metin girin.";
+"text_brush_copied" = "Kopyalandı";
+"text_brush_mode_full" = "Tam bölme";
+"text_brush_mode_keywords" = "Patlat";

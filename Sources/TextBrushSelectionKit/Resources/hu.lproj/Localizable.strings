@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Szöveg kijelölése húzással";
+"text_brush_select_all" = "Összes kijelölése";
+"text_brush_deselect_all" = "Kijelölés törlése";
+"text_brush_copy" = "Másolás";
+"text_brush_share" = "Megosztás";
+"text_brush_empty" = "Először adjon meg szöveget.";
+"text_brush_copied" = "Másolva";
+"text_brush_mode_full" = "Teljes bontás";
+"text_brush_mode_keywords" = "Robbantás";

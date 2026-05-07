@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Chọn văn bản bằng cách vuốt";
+"text_brush_select_all" = "Chọn tất cả";
+"text_brush_deselect_all" = "Bỏ chọn tất cả";
+"text_brush_copy" = "Sao chép";
+"text_brush_share" = "Chia sẻ";
+"text_brush_empty" = "Nhập văn bản trước.";
+"text_brush_copied" = "Đã sao chép";
+"text_brush_mode_full" = "Tách toàn bộ";
+"text_brush_mode_keywords" = "Bùng nổ";

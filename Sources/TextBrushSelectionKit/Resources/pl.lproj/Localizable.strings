@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Zaznaczanie tekstu przeciągnięciem";
+"text_brush_select_all" = "Zaznacz wszystko";
+"text_brush_deselect_all" = "Odznacz wszystko";
+"text_brush_copy" = "Kopiuj";
+"text_brush_share" = "Udostępnij";
+"text_brush_empty" = "Najpierw wpisz tekst.";
+"text_brush_copied" = "Skopiowano";
+"text_brush_mode_full" = "Pełny podział";
+"text_brush_mode_keywords" = "Eksplozja";

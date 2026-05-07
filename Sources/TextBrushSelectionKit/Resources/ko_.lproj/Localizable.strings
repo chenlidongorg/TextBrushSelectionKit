@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "쓸어서 텍스트 선택";
+"text_brush_select_all" = "전체 선택";
+"text_brush_deselect_all" = "전체 해제";
+"text_brush_copy" = "복사";
+"text_brush_share" = "공유";
+"text_brush_empty" = "먼저 텍스트를 입력하세요.";
+"text_brush_copied" = "복사됨";
+"text_brush_mode_full" = "전체 분할";
+"text_brush_mode_keywords" = "폭발";

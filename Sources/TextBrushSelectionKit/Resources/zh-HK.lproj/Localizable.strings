@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "塗抹選擇文字";
+"text_brush_select_all" = "全選";
+"text_brush_deselect_all" = "取消全選";
+"text_brush_copy" = "複製";
+"text_brush_share" = "分享";
+"text_brush_empty" = "請先輸入文字。";
+"text_brush_copied" = "已複製";
+"text_brush_mode_full" = "整體拆分";
+"text_brush_mode_keywords" = "爆炸";

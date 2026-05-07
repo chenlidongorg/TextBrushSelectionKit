@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Pilih teks dengan leret";
+"text_brush_select_all" = "Pilih semua";
+"text_brush_deselect_all" = "Nyahpilih semua";
+"text_brush_copy" = "Salin";
+"text_brush_share" = "Kongsi";
+"text_brush_empty" = "Masukkan teks dahulu.";
+"text_brush_copied" = "Disalin";
+"text_brush_mode_full" = "Pisah penuh";
+"text_brush_mode_keywords" = "Letupan";

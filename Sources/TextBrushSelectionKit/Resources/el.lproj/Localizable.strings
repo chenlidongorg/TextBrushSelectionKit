@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Επιλογή κειμένου με σύρσιμο";
+"text_brush_select_all" = "Επιλογή όλων";
+"text_brush_deselect_all" = "Κατάργηση επιλογής";
+"text_brush_copy" = "Αντιγραφή";
+"text_brush_share" = "Κοινή χρήση";
+"text_brush_empty" = "Πληκτρολογήστε πρώτα κείμενο.";
+"text_brush_copied" = "Αντιγράφηκε";
+"text_brush_mode_full" = "Πλήρης διάσπαση";
+"text_brush_mode_keywords" = "Έκρηξη";

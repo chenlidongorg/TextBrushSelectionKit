@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "เลือกข้อความด้วยการปัด";
+"text_brush_select_all" = "เลือกทั้งหมด";
+"text_brush_deselect_all" = "ยกเลิกทั้งหมด";
+"text_brush_copy" = "คัดลอก";
+"text_brush_share" = "แชร์";
+"text_brush_empty" = "ป้อนข้อความก่อน";
+"text_brush_copied" = "คัดลอกแล้ว";
+"text_brush_mode_full" = "แยกทั้งหมด";
+"text_brush_mode_keywords" = "ระเบิด";

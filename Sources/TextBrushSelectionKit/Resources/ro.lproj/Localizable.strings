@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Selectare text prin glisare";
+"text_brush_select_all" = "Selectează tot";
+"text_brush_deselect_all" = "Deselectează tot";
+"text_brush_copy" = "Copiază";
+"text_brush_share" = "Distribuie";
+"text_brush_empty" = "Introduceți mai întâi text.";
+"text_brush_copied" = "Copiat";
+"text_brush_mode_full" = "Împărțire completă";
+"text_brush_mode_keywords" = "Explozie";

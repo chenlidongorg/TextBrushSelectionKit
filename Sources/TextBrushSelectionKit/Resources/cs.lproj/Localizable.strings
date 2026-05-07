@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Výběr textu tažením";
+"text_brush_select_all" = "Vybrat vše";
+"text_brush_deselect_all" = "Zrušit výběr";
+"text_brush_copy" = "Kopírovat";
+"text_brush_share" = "Sdílet";
+"text_brush_empty" = "Nejprve zadejte text.";
+"text_brush_copied" = "Zkopírováno";
+"text_brush_mode_full" = "Celé členění";
+"text_brush_mode_keywords" = "Exploze";

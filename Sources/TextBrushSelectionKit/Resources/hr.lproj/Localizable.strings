@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Odabir teksta povlačenjem";
+"text_brush_select_all" = "Odaberi sve";
+"text_brush_deselect_all" = "Poništi odabir";
+"text_brush_copy" = "Kopiraj";
+"text_brush_share" = "Podijeli";
+"text_brush_empty" = "Najprije unesite tekst.";
+"text_brush_copied" = "Kopirano";
+"text_brush_mode_full" = "Cjelovita podjela";
+"text_brush_mode_keywords" = "Eksplozija";

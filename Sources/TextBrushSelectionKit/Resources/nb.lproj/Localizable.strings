@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Velg tekst med sveip";
+"text_brush_select_all" = "Velg alle";
+"text_brush_deselect_all" = "Fjern valg";
+"text_brush_copy" = "Kopier";
+"text_brush_share" = "Del";
+"text_brush_empty" = "Skriv inn tekst først.";
+"text_brush_copied" = "Kopiert";
+"text_brush_mode_full" = "Full deling";
+"text_brush_mode_keywords" = "Eksploder";

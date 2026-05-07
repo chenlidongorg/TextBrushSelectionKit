@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Výber textu ťahaním";
+"text_brush_select_all" = "Vybrať všetko";
+"text_brush_deselect_all" = "Zrušiť výber";
+"text_brush_copy" = "Kopírovať";
+"text_brush_share" = "Zdieľať";
+"text_brush_empty" = "Najprv zadajte text.";
+"text_brush_copied" = "Skopírované";
+"text_brush_mode_full" = "Úplné členenie";
+"text_brush_mode_keywords" = "Explózia";

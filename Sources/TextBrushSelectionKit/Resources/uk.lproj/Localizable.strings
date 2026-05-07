@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Вибір тексту жестом";
+"text_brush_select_all" = "Вибрати все";
+"text_brush_deselect_all" = "Зняти вибір";
+"text_brush_copy" = "Копіювати";
+"text_brush_share" = "Поділитися";
+"text_brush_empty" = "Спочатку введіть текст.";
+"text_brush_copied" = "Скопійовано";
+"text_brush_mode_full" = "Повне розбиття";
+"text_brush_mode_keywords" = "Вибух";

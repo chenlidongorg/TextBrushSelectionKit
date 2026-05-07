@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Välj text med svep";
+"text_brush_select_all" = "Välj alla";
+"text_brush_deselect_all" = "Avmarkera alla";
+"text_brush_copy" = "Kopiera";
+"text_brush_share" = "Dela";
+"text_brush_empty" = "Ange text först.";
+"text_brush_copied" = "Kopierat";
+"text_brush_mode_full" = "Full uppdelning";
+"text_brush_mode_keywords" = "Explodera";

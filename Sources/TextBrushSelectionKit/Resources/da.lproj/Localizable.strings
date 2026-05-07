@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Marker tekst med strygning";
+"text_brush_select_all" = "Vælg alle";
+"text_brush_deselect_all" = "Fravælg alle";
+"text_brush_copy" = "Kopiér";
+"text_brush_share" = "Del";
+"text_brush_empty" = "Indtast tekst først.";
+"text_brush_copied" = "Kopieret";
+"text_brush_mode_full" = "Fuld opdeling";
+"text_brush_mode_keywords" = "Eksplosion";

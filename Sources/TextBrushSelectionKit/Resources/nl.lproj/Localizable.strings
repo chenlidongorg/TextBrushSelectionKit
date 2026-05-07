@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Tekst selecteren door te vegen";
+"text_brush_select_all" = "Alles selecteren";
+"text_brush_deselect_all" = "Alles deselecteren";
+"text_brush_copy" = "Kopiëren";
+"text_brush_share" = "Delen";
+"text_brush_empty" = "Voer eerst tekst in.";
+"text_brush_copied" = "Gekopieerd";
+"text_brush_mode_full" = "Volledig splitsen";
+"text_brush_mode_keywords" = "Explosie";

@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "בחירת טקסט בגרירה";
+"text_brush_select_all" = "בחר הכל";
+"text_brush_deselect_all" = "בטל בחירה";
+"text_brush_copy" = "העתק";
+"text_brush_share" = "שתף";
+"text_brush_empty" = "הזן טקסט תחילה.";
+"text_brush_copied" = "הועתק";
+"text_brush_mode_full" = "פיצול מלא";
+"text_brush_mode_keywords" = "פיצוץ";

@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Seleccionar text arrossegant";
+"text_brush_select_all" = "Selecciona-ho tot";
+"text_brush_deselect_all" = "Desselecciona-ho tot";
+"text_brush_copy" = "Copia";
+"text_brush_share" = "Comparteix";
+"text_brush_empty" = "Introdueix text primer.";
+"text_brush_copied" = "Copiat";
+"text_brush_mode_full" = "Divisió completa";
+"text_brush_mode_keywords" = "Explosió";

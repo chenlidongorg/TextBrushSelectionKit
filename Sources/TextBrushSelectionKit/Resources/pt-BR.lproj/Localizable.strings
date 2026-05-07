@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Selecionar texto deslizando";
+"text_brush_select_all" = "Selecionar tudo";
+"text_brush_deselect_all" = "Desmarcar tudo";
+"text_brush_copy" = "Copiar";
+"text_brush_share" = "Compartilhar";
+"text_brush_empty" = "Digite o texto primeiro.";
+"text_brush_copied" = "Copiado";
+"text_brush_mode_full" = "Divisão completa";
+"text_brush_mode_keywords" = "Explosão";

@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "स्वाइप करके पाठ चुनें";
+"text_brush_select_all" = "सभी चुनें";
+"text_brush_deselect_all" = "चयन हटाएँ";
+"text_brush_copy" = "कॉपी";
+"text_brush_share" = "साझा करें";
+"text_brush_empty" = "पहले पाठ दर्ज करें।";
+"text_brush_copied" = "कॉपी हो गया";
+"text_brush_mode_full" = "पूरा विभाजन";
+"text_brush_mode_keywords" = "विस्फोट";

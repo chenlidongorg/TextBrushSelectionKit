@@ -1,0 +1,10 @@
+/* TextBrushSelectionKit */
+"text_brush_selection" = "Valitse teksti pyyhkäisemällä";
+"text_brush_select_all" = "Valitse kaikki";
+"text_brush_deselect_all" = "Poista valinta";
+"text_brush_copy" = "Kopioi";
+"text_brush_share" = "Jaa";
+"text_brush_empty" = "Kirjoita teksti ensin.";
+"text_brush_copied" = "Kopioitu";
+"text_brush_mode_full" = "Koko jako";
+"text_brush_mode_keywords" = "Räjäytys";
