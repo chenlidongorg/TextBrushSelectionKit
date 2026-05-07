@@ -32,6 +32,7 @@ public struct TextBrushSelectionView: View {
     @State private var dragVisitedIDs: Set<Int> = []
     @State private var copiedFeedback = false
     @State private var showShareSheet = false
+    @State private var shareText = ""
 
     public init(text: String) {
         let allTokens = TextBrushTokenizer.tokens(from: text)
@@ -62,7 +63,7 @@ public struct TextBrushSelectionView: View {
         }
 #if os(iOS)
         .sheet(isPresented: $showShareSheet) {
-            TextBrushSelectionActivityView(activityItems: [selectedText])
+            TextBrushSelectionActivityView(text: shareText)
         }
 #endif
     }
@@ -314,8 +315,10 @@ public struct TextBrushSelectionView: View {
     }
 
     private func shareSelection() {
-        guard hasSelection else { return }
+        let text = selectedText
+        guard !text.isEmpty else { return }
 #if os(iOS)
+        shareText = text
         showShareSheet = true
 #else
         copySelection()
@@ -858,11 +861,35 @@ private final class TextBrushPanHostView: UIView, UIGestureRecognizerDelegate {
     }
 }
 
+private final class TextBrushPlainTextActivityItem: NSObject, UIActivityItemSource {
+    private let text: NSString
+
+    init(text: String) {
+        self.text = text as NSString
+    }
+
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        text
+    }
+
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+        text
+    }
+
+    func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
+        textBrushLocalized("text_brush_selection")
+    }
+
+    func activityViewController(_ activityViewController: UIActivityViewController, dataTypeIdentifierForActivityType activityType: UIActivity.ActivityType?) -> String {
+        "public.utf8-plain-text"
+    }
+}
+
 private struct TextBrushSelectionActivityView: UIViewControllerRepresentable {
-    let activityItems: [Any]
+    let text: String
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        UIActivityViewController(activityItems: [TextBrushPlainTextActivityItem(text: text)], applicationActivities: nil)
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
