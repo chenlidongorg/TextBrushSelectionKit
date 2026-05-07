@@ -40,7 +40,7 @@ public struct TextBrushSelectionView: View {
 
     public var body: some View {
         ZStack {
-            backgroundColor.ignoresSafeArea()
+            backgroundColor.edgesIgnoringSafeArea(.all)
 
             VStack(spacing: 0) {
                 modeSelector
