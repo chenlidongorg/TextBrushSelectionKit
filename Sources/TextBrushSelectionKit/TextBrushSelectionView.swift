@@ -27,6 +27,7 @@ public struct TextBrushSelectionView: View {
     @State private var mode: TextBrushSelectionMode = .full
     @State private var selectedIDs: Set<Int> = []
     @State private var tokenFrames: [Int: CGRect] = [:]
+    @State private var dragIsHorizontalSelection: Bool?
     @State private var dragSelectionTarget: Bool?
     @State private var dragVisitedIDs: Set<Int> = []
     @State private var copiedFeedback = false
@@ -78,7 +79,7 @@ public struct TextBrushSelectionView: View {
             .onPreferenceChange(TextBrushTokenFramePreferenceKey.self) { frames in
                 tokenFrames = frames
             }
-            .gesture(selectionDragGesture)
+            .simultaneousGesture(selectionDragGesture)
         }
     }
 
@@ -111,7 +112,7 @@ public struct TextBrushSelectionView: View {
         .padding(4)
         .background(RoundedRectangle(cornerRadius: 11, style: .continuous).fill(selectorBackgroundColor))
         .padding(.horizontal, 18)
-        .padding(.top, 14)
+        .padding(.top, 114)
         .padding(.bottom, 6)
     }
 
@@ -220,9 +221,18 @@ public struct TextBrushSelectionView: View {
     private var selectionDragGesture: some Gesture {
         DragGesture(minimumDistance: 6, coordinateSpace: .named(coordinateSpaceName))
             .onChanged { value in
+                if dragIsHorizontalSelection == nil {
+                    let horizontalDistance = abs(value.translation.width)
+                    let verticalDistance = abs(value.translation.height)
+                    guard horizontalDistance > 8 || verticalDistance > 8 else { return }
+                    dragIsHorizontalSelection = horizontalDistance > verticalDistance * 1.25
+                }
+
+                guard dragIsHorizontalSelection == true else { return }
                 applyDragSelection(at: value.location)
             }
             .onEnded { _ in
+                dragIsHorizontalSelection = nil
                 dragSelectionTarget = nil
                 dragVisitedIDs.removeAll()
             }
@@ -344,11 +354,11 @@ public struct TextBrushSelectionView: View {
     }
 
     private var selectedBlockColor: Color {
-        Color(red: 0.02, green: 0.48, blue: 0.24)
+        Color.accentColor
     }
 
     private var selectedStrokeColor: Color {
-        Color(red: 0.08, green: 0.70, blue: 0.36)
+        Color.accentColor.opacity(colorScheme == .dark ? 0.82 : 0.72)
     }
 
     private var primaryTextColor: Color {
