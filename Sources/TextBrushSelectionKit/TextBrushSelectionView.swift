@@ -3,6 +3,7 @@ import UIKit
 #elseif os(macOS)
 import AppKit
 #endif
+import Foundation
 import NaturalLanguage
 import SwiftUI
 
@@ -20,10 +21,13 @@ public enum TextBrushSelectionKitStrings {
 public struct TextBrushSelectionView: View {
     @Environment(\.colorScheme) private var colorScheme
 
-    private let allTokens: [TextBrushToken]
-    private let keywordTokens: [TextBrushToken]
+    private let sourceText: String
     private let coordinateSpaceName = "TextBrushSelectionCoordinateSpace"
 
+    @State private var allTokens: [TextBrushToken] = []
+    @State private var keywordTokens: [TextBrushToken] = []
+    @State private var isPreparingTokens: Bool
+    @State private var hasStartedTokenPreparation = false
     @State private var mode: TextBrushSelectionMode = .full
     @State private var selectedIDs: Set<Int> = []
     @State private var tokenFrames: [Int: CGRect] = [:]
@@ -35,9 +39,8 @@ public struct TextBrushSelectionView: View {
     @State private var shareText = ""
 
     public init(text: String) {
-        let allTokens = TextBrushTokenizer.tokens(from: text)
-        self.allTokens = allTokens
-        self.keywordTokens = TextBrushKeywordExtractor.keywordTokens(from: text, fallbackTokens: allTokens)
+        self.sourceText = text
+        _isPreparingTokens = State(initialValue: !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
     }
 
     public var body: some View {
@@ -47,7 +50,9 @@ public struct TextBrushSelectionView: View {
             VStack(spacing: 0) {
                 modeSelector
 
-                if visibleTokens.isEmpty {
+                if isPreparingTokens {
+                    loadingContent
+                } else if visibleTokens.isEmpty {
                     emptyContent
                 } else {
                     tokenScrollView
@@ -66,6 +71,34 @@ public struct TextBrushSelectionView: View {
             TextBrushSelectionActivityView(text: shareText)
         }
 #endif
+        .onAppear(perform: prepareTokensIfNeeded)
+    }
+
+    private func prepareTokensIfNeeded() {
+        guard !hasStartedTokenPreparation else { return }
+        hasStartedTokenPreparation = true
+
+        let text = sourceText
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            isPreparingTokens = false
+            return
+        }
+
+        isPreparingTokens = true
+        DispatchQueue.global(qos: .userInitiated).async {
+            let allTokens = TextBrushTokenizer.tokens(from: text)
+            let keywordTokens = TextBrushKeywordExtractor.keywordTokens(from: text, fallbackTokens: allTokens)
+
+            DispatchQueue.main.async {
+                self.allTokens = allTokens
+                self.keywordTokens = keywordTokens
+                self.selectedIDs.removeAll()
+                self.tokenFrames.removeAll()
+                withAnimation(.easeInOut(duration: 0.16)) {
+                    self.isPreparingTokens = false
+                }
+            }
+        }
     }
 
     private var tokenScrollView: some View {
@@ -155,6 +188,14 @@ public struct TextBrushSelectionView: View {
                 .foregroundColor(secondaryTextColor)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 28)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var loadingContent: some View {
+        VStack(spacing: 0) {
+            TextBrushLoadingIndicator()
+                .frame(width: 34, height: 34)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -647,19 +688,45 @@ private enum TextBrushKeywordExtractor {
             return fallbackKeywords(from: fallbackTokens)
         }
 
-        return uniqueCandidates.enumerated().map { index, keyword in
-            TextBrushToken(
-                id: index,
-                text: keyword,
-                leadingWhitespace: index == 0 ? "" : " ",
-                kind: keyword.unicodeScalars.contains { TextBrushTokenizer.isCJKLikeValue($0.value) } ? .cjk : .word
-            )
-        }
+        return tokens(from: uniqueCandidates)
     }
 
     private static func keywordCandidates(from text: String, language: NLLanguage?) -> [String] {
+        let entityCandidates = dataDetectorCandidates(from: text) + namedEntityCandidates(from: text, language: language)
+        let lexicalCandidates = lexicalKeywordCandidates(from: text, language: language)
+
+        if !entityCandidates.isEmpty {
+            return entityCandidates + lexicalCandidates
+        }
+
+        if !lexicalCandidates.isEmpty {
+            return lexicalCandidates
+        }
+
+        return tokenizedWordCandidates(from: text, language: language)
+    }
+
+    private static func dataDetectorCandidates(from text: String) -> [String] {
+        let checkingTypes =
+            NSTextCheckingResult.CheckingType.address.rawValue |
+            NSTextCheckingResult.CheckingType.phoneNumber.rawValue |
+            NSTextCheckingResult.CheckingType.link.rawValue |
+            NSTextCheckingResult.CheckingType.date.rawValue |
+            NSTextCheckingResult.CheckingType.transitInformation.rawValue
+
+        guard let detector = try? NSDataDetector(types: checkingTypes) else { return [] }
+        let nsRange = NSRange(text.startIndex..<text.endIndex, in: text)
+
+        return detector.matches(in: text, options: [], range: nsRange).compactMap { result in
+            guard let range = Range(result.range, in: text) else { return nil }
+            let value = String(text[range]).trimmingCharacters(in: .whitespacesAndNewlines)
+            return value.isEmpty ? nil : value
+        }
+    }
+
+    private static func namedEntityCandidates(from text: String, language: NLLanguage?) -> [String] {
         var candidates: [String] = []
-        let tagger = NLTagger(tagSchemes: [.lexicalClass, .nameType])
+        let tagger = NLTagger(tagSchemes: [.nameType])
         tagger.string = text
         if let language = language {
             tagger.setLanguage(language, range: text.startIndex..<text.endIndex)
@@ -672,12 +739,24 @@ private enum TextBrushKeywordExtractor {
             scheme: .nameType,
             options: options
         ) { tag, tokenRange in
-            if tag != nil {
+            if tag == .personalName || tag == .placeName || tag == .organizationName {
                 candidates.append(String(text[tokenRange]))
             }
             return true
         }
 
+        return candidates
+    }
+
+    private static func lexicalKeywordCandidates(from text: String, language: NLLanguage?) -> [String] {
+        var candidates: [String] = []
+        let tagger = NLTagger(tagSchemes: [.lexicalClass, .nameType])
+        tagger.string = text
+        if let language = language {
+            tagger.setLanguage(language, range: text.startIndex..<text.endIndex)
+        }
+
+        let options: NLTagger.Options = [.omitWhitespace, .omitPunctuation, .joinNames]
         tagger.enumerateTags(
             in: text.startIndex..<text.endIndex,
             unit: .word,
@@ -685,9 +764,25 @@ private enum TextBrushKeywordExtractor {
             options: options
         ) { tag, tokenRange in
             let token = String(text[tokenRange])
-            if tag == .noun || tag == .verb || tag == .adjective || tag == .personalName || tag == .placeName || tag == .organizationName {
+            if tag == .noun || tag == .adjective {
                 candidates.append(token)
             }
+            return true
+        }
+
+        return candidates
+    }
+
+    private static func tokenizedWordCandidates(from text: String, language: NLLanguage?) -> [String] {
+        let tokenizer = NLTokenizer(unit: .word)
+        tokenizer.string = text
+        if let language = language {
+            tokenizer.setLanguage(language)
+        }
+
+        var candidates: [String] = []
+        tokenizer.enumerateTokens(in: text.startIndex..<text.endIndex) { range, _ in
+            candidates.append(String(text[range]))
             return true
         }
 
@@ -703,7 +798,11 @@ private enum TextBrushKeywordExtractor {
         )
         .filter { isUsefulKeyword($0) }
 
-        return candidates.enumerated().map { index, keyword in
+        return self.tokens(from: candidates)
+    }
+
+    private static func tokens(from keywords: [String]) -> [TextBrushToken] {
+        keywords.enumerated().map { index, keyword in
             TextBrushToken(
                 id: index,
                 text: keyword,
@@ -768,6 +867,21 @@ private enum TextBrushClipboard {
 }
 
 #if os(iOS)
+private struct TextBrushLoadingIndicator: UIViewRepresentable {
+    func makeUIView(context: Context) -> UIActivityIndicatorView {
+        let view = UIActivityIndicatorView(style: .medium)
+        view.hidesWhenStopped = false
+        view.color = .secondaryLabel
+        view.startAnimating()
+        return view
+    }
+
+    func updateUIView(_ uiView: UIActivityIndicatorView, context: Context) {
+        uiView.color = .secondaryLabel
+        uiView.startAnimating()
+    }
+}
+
 private struct TextBrushHorizontalPanBridge: UIViewRepresentable {
     let onChanged: (CGPoint) -> Void
     let onEnded: () -> Void
@@ -893,6 +1007,21 @@ private struct TextBrushSelectionActivityView: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+#elseif os(macOS)
+private struct TextBrushLoadingIndicator: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSProgressIndicator {
+        let view = NSProgressIndicator()
+        view.style = .spinning
+        view.controlSize = .regular
+        view.isIndeterminate = true
+        view.startAnimation(nil)
+        return view
+    }
+
+    func updateNSView(_ nsView: NSProgressIndicator, context: Context) {
+        nsView.startAnimation(nil)
+    }
 }
 #endif
 
