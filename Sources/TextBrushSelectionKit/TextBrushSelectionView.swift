@@ -68,18 +68,45 @@ public struct TextBrushSelectionView: View {
     }
 
     private var tokenScrollView: some View {
-        ScrollView {
-            TextBrushFlowLayout(tokens: visibleTokens, spacing: 5) { token in
-                tokenCell(token)
+        GeometryReader { proxy in
+            let rows = TextBrushRowBuilder.rows(
+                from: visibleTokens,
+                maxWidth: max(proxy.size.width - 36, 1),
+                spacing: 5
+            )
+
+            ScrollView(.vertical, showsIndicators: true) {
+                VStack(alignment: .leading, spacing: 5) {
+                    ForEach(rows) { row in
+                        HStack(spacing: 5) {
+                            ForEach(row.tokens) { token in
+                                tokenCell(token)
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, 18)
+                .padding(.top, 18)
+                .padding(.bottom, 28)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .coordinateSpace(name: coordinateSpaceName)
+                .onPreferenceChange(TextBrushTokenFramePreferenceKey.self) { frames in
+                    tokenFrames = frames
+                }
+#if os(iOS)
+                .background(
+                    TextBrushHorizontalPanBridge(
+                        onChanged: { location in
+                            dragIsHorizontalSelection = true
+                            applyDragSelection(at: location)
+                        },
+                        onEnded: resetDragSelectionState
+                    )
+                )
+#else
+                .simultaneousGesture(selectionDragGesture)
+#endif
             }
-            .padding(.horizontal, 18)
-            .padding(.top, 18)
-            .padding(.bottom, 28)
-            .coordinateSpace(name: coordinateSpaceName)
-            .onPreferenceChange(TextBrushTokenFramePreferenceKey.self) { frames in
-                tokenFrames = frames
-            }
-            .simultaneousGesture(selectionDragGesture)
         }
     }
 
@@ -112,7 +139,7 @@ public struct TextBrushSelectionView: View {
         .padding(4)
         .background(RoundedRectangle(cornerRadius: 11, style: .continuous).fill(selectorBackgroundColor))
         .padding(.horizontal, 18)
-        .padding(.top, 114)
+        .padding(.top, 90)
         .padding(.bottom, 6)
     }
 
@@ -219,23 +246,27 @@ public struct TextBrushSelectionView: View {
     }
 
     private var selectionDragGesture: some Gesture {
-        DragGesture(minimumDistance: 6, coordinateSpace: .named(coordinateSpaceName))
+        DragGesture(minimumDistance: 10, coordinateSpace: .named(coordinateSpaceName))
             .onChanged { value in
                 if dragIsHorizontalSelection == nil {
                     let horizontalDistance = abs(value.translation.width)
                     let verticalDistance = abs(value.translation.height)
-                    guard horizontalDistance > 8 || verticalDistance > 8 else { return }
-                    dragIsHorizontalSelection = horizontalDistance > verticalDistance * 1.25
+                    guard horizontalDistance > 12 || verticalDistance > 12 else { return }
+                    dragIsHorizontalSelection = horizontalDistance > verticalDistance * 1.4
                 }
 
                 guard dragIsHorizontalSelection == true else { return }
                 applyDragSelection(at: value.location)
             }
             .onEnded { _ in
-                dragIsHorizontalSelection = nil
-                dragSelectionTarget = nil
-                dragVisitedIDs.removeAll()
+                resetDragSelectionState()
             }
+    }
+
+    private func resetDragSelectionState() {
+        dragIsHorizontalSelection = nil
+        dragSelectionTarget = nil
+        dragVisitedIDs.removeAll()
     }
 
     private func applyDragSelection(at location: CGPoint) {
@@ -412,72 +443,6 @@ private enum TextBrushSelectionMode: String, CaseIterable, Identifiable {
     }
 }
 
-@available(iOS 13.0, macOS 11.0, *)
-private struct TextBrushFlowLayout<Content: View>: View {
-    let tokens: [TextBrushToken]
-    let spacing: CGFloat
-    let content: (TextBrushToken) -> Content
-
-    @State private var totalHeight: CGFloat = .zero
-
-    var body: some View {
-        GeometryReader { geometry in
-            flowContent(in: geometry)
-        }
-        .frame(height: totalHeight)
-    }
-
-    private func flowContent(in geometry: GeometryProxy) -> some View {
-        var width: CGFloat = 0
-        var height: CGFloat = 0
-
-        return ZStack(alignment: .topLeading) {
-            ForEach(tokens) { token in
-                content(token)
-                    .padding(.trailing, spacing)
-                    .padding(.bottom, spacing)
-                    .alignmentGuide(.leading) { dimension in
-                        if abs(width - dimension.width) > geometry.size.width {
-                            width = 0
-                            height -= dimension.height
-                        }
-
-                        let result = width
-                        if token.id == tokens.last?.id {
-                            width = 0
-                        } else {
-                            width -= dimension.width
-                        }
-                        return result
-                    }
-                    .alignmentGuide(.top) { _ in
-                        let result = height
-                        if token.id == tokens.last?.id {
-                            height = 0
-                        }
-                        return result
-                    }
-            }
-        }
-        .background(
-            GeometryReader { proxy in
-                Color.clear.preference(key: TextBrushFlowHeightPreferenceKey.self, value: proxy.size.height)
-            }
-        )
-        .onPreferenceChange(TextBrushFlowHeightPreferenceKey.self) { height in
-            totalHeight = max(height, 1)
-        }
-    }
-}
-
-private struct TextBrushFlowHeightPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = .zero
-
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = max(value, nextValue())
-    }
-}
-
 private struct TextBrushTokenFramePreferenceKey: PreferenceKey {
     static var defaultValue: [Int: CGRect] = [:]
 
@@ -498,6 +463,55 @@ private struct TextBrushToken: Identifiable, Hashable {
     let text: String
     let leadingWhitespace: String
     let kind: Kind
+}
+
+private struct TextBrushTokenRow: Identifiable {
+    let id: Int
+    let tokens: [TextBrushToken]
+}
+
+private enum TextBrushRowBuilder {
+    static func rows(from tokens: [TextBrushToken], maxWidth: CGFloat, spacing: CGFloat) -> [TextBrushTokenRow] {
+        var rows: [TextBrushTokenRow] = []
+        var currentTokens: [TextBrushToken] = []
+        var currentWidth: CGFloat = 0
+
+        func appendCurrentRow() {
+            guard let firstID = currentTokens.first?.id else { return }
+            rows.append(TextBrushTokenRow(id: firstID, tokens: currentTokens))
+            currentTokens.removeAll()
+            currentWidth = 0
+        }
+
+        for token in tokens {
+            let tokenWidth = min(estimatedWidth(for: token), maxWidth)
+            let nextWidth = currentTokens.isEmpty ? tokenWidth : currentWidth + spacing + tokenWidth
+
+            if !currentTokens.isEmpty && nextWidth > maxWidth {
+                appendCurrentRow()
+            }
+
+            currentTokens.append(token)
+            currentWidth = currentTokens.count == 1 ? tokenWidth : currentWidth + spacing + tokenWidth
+        }
+
+        appendCurrentRow()
+        return rows
+    }
+
+    private static func estimatedWidth(for token: TextBrushToken) -> CGFloat {
+        let scalarCount = max(token.text.unicodeScalars.count, 1)
+
+        switch token.kind {
+        case .word:
+            let fontSize: CGFloat = token.text.count > 14 ? 17 : 20
+            return max(42, CGFloat(scalarCount) * fontSize * 0.58 + 24)
+        case .cjk:
+            return max(36, CGFloat(scalarCount) * 22 + 20)
+        case .punctuation, .symbol:
+            return max(36, CGFloat(scalarCount) * 16 + 20)
+        }
+    }
 }
 
 private enum TextBrushTokenizer {
@@ -751,6 +765,99 @@ private enum TextBrushClipboard {
 }
 
 #if os(iOS)
+private struct TextBrushHorizontalPanBridge: UIViewRepresentable {
+    let onChanged: (CGPoint) -> Void
+    let onEnded: () -> Void
+
+    func makeUIView(context: Context) -> TextBrushPanHostView {
+        let view = TextBrushPanHostView()
+        view.backgroundColor = .clear
+        view.onChanged = onChanged
+        view.onEnded = onEnded
+        return view
+    }
+
+    func updateUIView(_ uiView: TextBrushPanHostView, context: Context) {
+        uiView.onChanged = onChanged
+        uiView.onEnded = onEnded
+        DispatchQueue.main.async {
+            uiView.installIfNeeded()
+        }
+    }
+}
+
+private final class TextBrushPanHostView: UIView, UIGestureRecognizerDelegate {
+    var onChanged: ((CGPoint) -> Void)?
+    var onEnded: (() -> Void)?
+
+    private weak var installedScrollView: UIScrollView?
+    private var panRecognizer: UIPanGestureRecognizer?
+
+    deinit {
+        if let panRecognizer = panRecognizer {
+            installedScrollView?.removeGestureRecognizer(panRecognizer)
+        }
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        installIfNeeded()
+    }
+
+    func installIfNeeded() {
+        guard let scrollView = nearestScrollView() else { return }
+        guard installedScrollView !== scrollView else { return }
+
+        if let panRecognizer = panRecognizer {
+            installedScrollView?.removeGestureRecognizer(panRecognizer)
+        }
+
+        let recognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        recognizer.delegate = self
+        recognizer.cancelsTouchesInView = false
+        recognizer.delaysTouchesBegan = false
+        recognizer.delaysTouchesEnded = false
+        scrollView.addGestureRecognizer(recognizer)
+
+        installedScrollView = scrollView
+        panRecognizer = recognizer
+    }
+
+    @objc private func handlePan(_ recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .began, .changed:
+            onChanged?(recognizer.location(in: self))
+        case .ended, .cancelled, .failed:
+            onEnded?()
+        default:
+            break
+        }
+    }
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let panRecognizer = gestureRecognizer as? UIPanGestureRecognizer else { return true }
+        let velocity = panRecognizer.velocity(in: self)
+        let horizontalVelocity = abs(velocity.x)
+        let verticalVelocity = abs(velocity.y)
+        return horizontalVelocity > 40 && horizontalVelocity > verticalVelocity * 1.35
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        true
+    }
+
+    private func nearestScrollView() -> UIScrollView? {
+        var candidate = superview
+        while let view = candidate {
+            if let scrollView = view as? UIScrollView {
+                return scrollView
+            }
+            candidate = view.superview
+        }
+        return nil
+    }
+}
+
 private struct TextBrushSelectionActivityView: UIViewControllerRepresentable {
     let activityItems: [Any]
 
