@@ -6,5 +6,5 @@
 "text_brush_share" = "Sdílet";
 "text_brush_empty" = "Nejprve zadejte text.";
 "text_brush_copied" = "Zkopírováno";
-"text_brush_mode_full" = "Celé členění";
-"text_brush_mode_keywords" = "Exploze";
+"text_brush_mode_full" = "Úplné rozdělení";
+"text_brush_mode_keywords" = "Extrahovat klíčová slova";

@@ -6,5 +6,5 @@
 "text_brush_share" = "Share";
 "text_brush_empty" = "Enter text first.";
 "text_brush_copied" = "Copied";
-"text_brush_mode_full" = "Full split";
-"text_brush_mode_keywords" = "Explode";
+"text_brush_mode_full" = "Complete split";
+"text_brush_mode_keywords" = "Extract keywords";

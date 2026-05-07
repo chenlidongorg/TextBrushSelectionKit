@@ -6,5 +6,5 @@
 "text_brush_share" = "共有";
 "text_brush_empty" = "先にテキストを入力してください。";
 "text_brush_copied" = "コピーしました";
-"text_brush_mode_full" = "全体分割";
-"text_brush_mode_keywords" = "爆発";
+"text_brush_mode_full" = "完全分割";
+"text_brush_mode_keywords" = "キーワードを抽出";

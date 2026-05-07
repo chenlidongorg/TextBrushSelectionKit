@@ -6,5 +6,5 @@
 "text_brush_share" = "Поділитися";
 "text_brush_empty" = "Спочатку введіть текст.";
 "text_brush_copied" = "Скопійовано";
-"text_brush_mode_full" = "Повне розбиття";
-"text_brush_mode_keywords" = "Вибух";
+"text_brush_mode_full" = "Повне розділення";
+"text_brush_mode_keywords" = "Витягти ключові слова";

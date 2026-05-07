@@ -6,5 +6,5 @@
 "text_brush_share" = "Dela";
 "text_brush_empty" = "Ange text först.";
 "text_brush_copied" = "Kopierat";
-"text_brush_mode_full" = "Full uppdelning";
-"text_brush_mode_keywords" = "Explodera";
+"text_brush_mode_full" = "Fullständig delning";
+"text_brush_mode_keywords" = "Extrahera nyckelord";

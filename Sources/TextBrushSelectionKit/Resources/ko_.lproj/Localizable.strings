@@ -6,5 +6,5 @@
 "text_brush_share" = "공유";
 "text_brush_empty" = "먼저 텍스트를 입력하세요.";
 "text_brush_copied" = "복사됨";
-"text_brush_mode_full" = "전체 분할";
-"text_brush_mode_keywords" = "폭발";
+"text_brush_mode_full" = "완전 분할";
+"text_brush_mode_keywords" = "키워드 추출";

@@ -6,5 +6,5 @@
 "text_brush_share" = "Teilen";
 "text_brush_empty" = "Gib zuerst Text ein.";
 "text_brush_copied" = "Kopiert";
-"text_brush_mode_full" = "Gesamte Aufteilung";
-"text_brush_mode_keywords" = "Explosion";
+"text_brush_mode_full" = "Vollständige Aufteilung";
+"text_brush_mode_keywords" = "Schlüsselwörter extrahieren";

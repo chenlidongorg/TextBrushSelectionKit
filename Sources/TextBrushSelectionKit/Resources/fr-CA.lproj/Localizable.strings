@@ -7,4 +7,4 @@
 "text_brush_empty" = "Saisissez d’abord du texte.";
 "text_brush_copied" = "Copié";
 "text_brush_mode_full" = "Découpage complet";
-"text_brush_mode_keywords" = "Explosion";
+"text_brush_mode_keywords" = "Extraire les mots-clés";

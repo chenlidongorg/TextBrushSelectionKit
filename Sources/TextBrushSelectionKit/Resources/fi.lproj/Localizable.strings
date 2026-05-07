@@ -6,5 +6,5 @@
 "text_brush_share" = "Jaa";
 "text_brush_empty" = "Kirjoita teksti ensin.";
 "text_brush_copied" = "Kopioitu";
-"text_brush_mode_full" = "Koko jako";
-"text_brush_mode_keywords" = "Räjäytys";
+"text_brush_mode_full" = "Täysi jako";
+"text_brush_mode_keywords" = "Poimi avainsanat";

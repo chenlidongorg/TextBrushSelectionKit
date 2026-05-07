@@ -6,5 +6,5 @@
 "text_brush_share" = "Поделиться";
 "text_brush_empty" = "Сначала введите текст.";
 "text_brush_copied" = "Скопировано";
-"text_brush_mode_full" = "Полная разбивка";
-"text_brush_mode_keywords" = "Взрыв";
+"text_brush_mode_full" = "Полное разделение";
+"text_brush_mode_keywords" = "Извлечь ключевые слова";

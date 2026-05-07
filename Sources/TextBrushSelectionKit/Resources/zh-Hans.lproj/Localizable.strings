@@ -6,5 +6,5 @@
 "text_brush_share" = "分享";
 "text_brush_empty" = "请先输入文字。";
 "text_brush_copied" = "已复制";
-"text_brush_mode_full" = "整体拆分";
-"text_brush_mode_keywords" = "爆炸";
+"text_brush_mode_full" = "完整拆分";
+"text_brush_mode_keywords" = "提取关键词";

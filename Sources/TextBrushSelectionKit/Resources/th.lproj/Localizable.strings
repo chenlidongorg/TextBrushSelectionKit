@@ -6,5 +6,5 @@
 "text_brush_share" = "แชร์";
 "text_brush_empty" = "ป้อนข้อความก่อน";
 "text_brush_copied" = "คัดลอกแล้ว";
-"text_brush_mode_full" = "แยกทั้งหมด";
-"text_brush_mode_keywords" = "ระเบิด";
+"text_brush_mode_full" = "แยกแบบสมบูรณ์";
+"text_brush_mode_keywords" = "ดึงคำสำคัญ";

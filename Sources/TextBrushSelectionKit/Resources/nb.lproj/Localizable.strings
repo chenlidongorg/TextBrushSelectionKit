@@ -6,5 +6,5 @@
 "text_brush_share" = "Del";
 "text_brush_empty" = "Skriv inn tekst først.";
 "text_brush_copied" = "Kopiert";
-"text_brush_mode_full" = "Full deling";
-"text_brush_mode_keywords" = "Eksploder";
+"text_brush_mode_full" = "Fullstendig deling";
+"text_brush_mode_keywords" = "Trekk ut nøkkelord";
