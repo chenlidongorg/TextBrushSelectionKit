@@ -834,7 +834,7 @@ private final class TextBrushPanHostView: UIView, UIGestureRecognizerDelegate {
         }
     }
 
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let panRecognizer = gestureRecognizer as? UIPanGestureRecognizer else { return true }
         let velocity = panRecognizer.velocity(in: self)
         let horizontalVelocity = abs(velocity.x)
