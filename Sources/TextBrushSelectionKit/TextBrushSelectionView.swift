@@ -140,7 +140,7 @@ public struct TextBrushSelectionView: View {
         .padding(4)
         .background(RoundedRectangle(cornerRadius: 11, style: .continuous).fill(selectorBackgroundColor))
         .padding(.horizontal, 18)
-        .padding(.top, 90)
+        .padding(.top, 72)
         .padding(.bottom, 6)
     }
 
